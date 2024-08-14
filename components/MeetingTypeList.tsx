@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image'; // Import Image from next/image
 
 import HomeCard from './HomeCard';
 import MeetingModal from './MeetingModal';
@@ -79,7 +80,7 @@ const MeetingTypeList = () => {
         className="bg-orange-1"
       />
 
-      <HomeCard
+        <HomeCard
         img="/icons/schedule.svg"
         title="Schedule Meeting"
         description="Plan your Meeting"
@@ -103,53 +104,55 @@ const MeetingTypeList = () => {
         className="bg-yellow-1"
       />
 
-      {!callDetails ? (
-      <MeetingModal
-        isOpen={meetingState === 'isScheduleMeeting'}
-        onClose={() => setMeetingState(undefined)}
-        title="Create Meeting"
-        handleClick={createMeeting}
+{!callDetails ? (
+        <MeetingModal
+          isOpen={meetingState === 'isScheduleMeeting'}
+          onClose={() => setMeetingState(undefined)}
+          title="Create Meeting"
+          handleClick={createMeeting}
         >
           <div className="flex flex-col gap-2.5">
             <label className="text-base text-normal leading-[22px] text-sky-2">
               Add a description
             </label>
-            <Textarea className="border-none bg-dark-2 focus-visible:ring-0 focus-visible-ring-offset-0"
-            onChange={(e) => {
-              setValues({ ...values, description: e.target.value })
-            }}/>
+            <Textarea
+              className="border-none bg-dark-2 focus-visible:ring-0 focus-visible-ring-offset-0"
+              onChange={(e) => {
+                setValues({ ...values, description: e.target.value })
+              }}
+            />
           </div>
-          <div className="flex w-full flex-col gap-2.5">
-            <label className="text-base font-normal leading-[22.4px] text-sky-2">
-              Select Date and Time
+          <div className="mt-4">
+            <label className="text-base text-normal leading-[22px] text-sky-2">
+              Date and Time
             </label>
             <ReactDatePicker
               selected={values.dateTime}
-              onChange={(date) => setValues({ ...values, dateTime: date! })}
               showTimeSelect
-              timeFormat="HH:mm"
               timeIntervals={15}
-              timeCaption="time"
-              dateFormat="MMMM d, yyyy h:mm aa"
-              className="w-full rounded bg-dark-2 p-2 focus:outline-none"
+              onChange={(date) => {
+                setValues({ ...values, dateTime: date || new Date() });
+              }}
+              minDate={new Date()}
+              timeFormat="h:mm aa"
+              className="w-full mt-2 p-2.5 bg-dark-2 text-white"
             />
           </div>
         </MeetingModal>
       ) : (
         <MeetingModal
-        isOpen={meetingState === 'isScheduleMeeting'}
-        onClose={() => setMeetingState(undefined)}
-        title="Meeting Created"
-        className="text-center"
-        buttonText="Start Meeting"
-        handleClick={() => {
-          navigator.clipboard.writeText(meetingLink);
-          toast({ title: 'Link copied'})
-        }}
-        image="/icons/checked.svg"
-        //buttonIcon="/icons/copy.svg"
-        buttonText="Copy Meeting Link"
+          isOpen={meetingState === 'isScheduleMeeting'}
+          onClose={() => setMeetingState(undefined)}
+          title="Meeting Created"
+          className="text-center"
+          handleClick={() => {
+              navigator.clipboard.writeText(meetingLink);
+              toast({ title: 'Link copied' });
+          }}
+          image="/icons/checked.svg"
+          buttonText="Copy Meeting Link"
       />
+
       )}
       <MeetingModal
         isOpen={meetingState === 'isInstantMeeting'}
