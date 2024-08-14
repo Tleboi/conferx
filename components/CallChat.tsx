@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
+import Image from 'next/image'; // Import Image from next/image
 
 interface CallChatProps {
   onClose: () => void;
@@ -68,10 +69,12 @@ const CallChat = ({ onClose }: CallChatProps) => {
       <div className="flex-grow overflow-y-auto chat-messages">
         {messages.map((message) => (
           <div key={message.id} className="flex items-start mb-4">
-            <img
+            <Image
               src={message.senderProfile}
               alt={message.senderName}
               className="w-8 h-8 rounded-full mr-2"
+              width={32} // Specify width
+              height={32} // Specify height
             />
             <div>
               <p className="text-white font-bold">{message.senderName}</p>
@@ -79,10 +82,12 @@ const CallChat = ({ onClose }: CallChatProps) => {
               {message.file && (
                 <div>
                   {message.fileType?.startsWith('image/') ? (
-                    <img
+                    <Image
                       src={URL.createObjectURL(message.file)}
                       alt="uploaded"
                       className="max-w-full h-auto rounded"
+                      width={400} // Example width
+                      height={300} // Example height
                     />
                   ) : (
                     <a
